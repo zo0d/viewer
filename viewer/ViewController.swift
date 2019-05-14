@@ -19,6 +19,10 @@ class ViewController: UITableViewController {
         title = "Viewer"
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        performSelector(inBackground: #selector(fetchNSSL), with: nil)
+    }
+    
+    @objc func fetchNSSL() {
         let fm = FileManager.init()
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
@@ -28,7 +32,9 @@ class ViewController: UITableViewController {
                 pictures.append(item)
             }
         }
+        
         pictures.sort()
+        tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
